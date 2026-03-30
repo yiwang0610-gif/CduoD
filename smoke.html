@@ -2,15 +2,24 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>慢慢戒烟 · 我在陪你</title>
+<title>慢慢戒烟 · 我在你身边</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+    :root {
+        --pink: #ff6b9a;
+        --pink-soft: #fff0f6;
+        --text-main: #4a4a4a;
+        --text-sub: #888;
+    }
+
     body {
         margin: 0;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: linear-gradient(180deg, #fff0f3, #fdfbfb);
-        color: #444;
+        background:
+            radial-gradient(circle at top, #ffe3ec, transparent 60%),
+            linear-gradient(180deg, #fff5f8, #fdfbfb);
+        color: var(--text-main);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -18,112 +27,151 @@
     }
 
     .card {
-        background: #fff;
         width: 90%;
         max-width: 420px;
-        padding: 28px;
-        border-radius: 18px;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        padding: 30px 26px;
+        border-radius: 26px;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(10px);
+        box-shadow:
+            0 20px 40px rgba(255, 107, 154, 0.18),
+            inset 0 1px 0 rgba(255,255,255,0.6);
         text-align: center;
+        animation: breathe 6s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+        0%,100% { transform: scale(1); }
+        50% { transform: scale(1.01); }
     }
 
     h1 {
-        margin-top: 0;
-        font-size: 24px;
-        color: #d6336c;
+        margin: 0 0 10px;
+        font-size: 26px;
+        color: var(--pink);
+        letter-spacing: 1px;
     }
 
     .subtitle {
         font-size: 14px;
-        color: #777;
-        margin-bottom: 24px;
-        line-height: 1.6;
+        color: var(--text-sub);
+        margin-bottom: 26px;
+        line-height: 1.8;
+    }
+
+    .circle {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 18px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ffe0ea, #fff);
+        box-shadow:
+            inset 0 6px 12px rgba(255,255,255,0.8),
+            0 10px 20px rgba(255, 107, 154, 0.25);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .count {
-        font-size: 40px;
-        font-weight: bold;
+        font-size: 44px;
+        font-weight: 600;
         color: #333;
-        margin: 10px 0;
+        line-height: 1;
     }
 
     .label {
-        font-size: 14px;
+        font-size: 13px;
         color: #999;
+        margin-top: 6px;
     }
 
     button {
         width: 100%;
-        padding: 14px;
+        padding: 15px;
         margin-top: 14px;
-        border-radius: 12px;
+        border-radius: 18px;
         border: none;
         font-size: 16px;
         cursor: pointer;
+        transition: all .25s ease;
     }
 
     .add {
-        background: #ff6b81;
+        background: linear-gradient(135deg, #ff7aa8, #ff5f8f);
         color: #fff;
+        box-shadow: 0 10px 18px rgba(255,107,154,.35);
     }
 
     .add:hover {
-        background: #fa5c72;
+        transform: translateY(-1px);
+        box-shadow: 0 14px 24px rgba(255,107,154,.45);
     }
 
     .reset {
-        background: #f1f3f5;
-        color: #666;
+        background: #f7f7f7;
+        color: #777;
     }
 
     .secret {
-        background: #fff0f6;
-        color: #d6336c;
-        border: 1px dashed #ffb3c1;
-    }
-
-    .footer {
-        margin-top: 22px;
-        font-size: 13px;
-        color: #aaa;
-        line-height: 1.6;
+        background: transparent;
+        color: var(--pink);
+        border: 1px dashed #ffc2d3;
     }
 
     .hidden {
         display: none;
+    }
+
+    .totalBox {
+        margin-top: 20px;
+        padding: 18px;
+        border-radius: 18px;
+        background: var(--pink-soft);
+        animation: fadeIn .6s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+        margin-top: 24px;
+        font-size: 13px;
+        color: #aaa;
+        line-height: 1.7;
     }
 </style>
 </head>
 
 <body>
 <div class="card">
-    <h1>慢慢戒烟 🌷</h1>
+    <h1>慢慢戒烟</h1>
     <div class="subtitle">
-        不急，不逼自己。<br>
+        不用一下子变好。<br>
         你愿意记录，本身就很了不起。
     </div>
 
-    <div class="label">今天已经抽了</div>
-    <div class="count" id="todayCount">0</div>
-    <div class="label">根</div>
+    <div class="circle">
+        <div class="count" id="todayCount">0</div>
+        <div class="label">今天抽了 · 根</div>
+    </div>
 
     <button class="add" onclick="addCigarette()">我刚抽了一根</button>
     <button class="reset" onclick="resetToday()">今天重新开始</button>
 
-    <hr style="margin:26px 0;border:none;border-top:1px solid #eee">
-
-    <!-- 累计总数（默认隐藏） -->
-    <div id="totalArea" class="hidden">
-        <div class="label">累计抽烟总数</div>
+    <div id="totalArea" class="totalBox hidden">
+        <div class="label">到现在为止</div>
         <div class="count" id="totalCount">0</div>
         <div class="label">根</div>
     </div>
 
-    <button class="secret" onclick="checkPassword()">查看累计总数</button>
+    <button class="secret" onclick="checkPassword()">查看累计记录</button>
 
     <div class="footer">
-        不是逼自己变好，<br>
-        是慢慢学会心疼自己。
+        你不是软弱，<br>
+        你只是比别人更认真地活着。
     </div>
 </div>
 
@@ -131,8 +179,6 @@
     const todayKey = "smoke_today";
     const totalKey = "smoke_total";
     const dateKey  = "smoke_date";
-
-    // 🔐 在这里改密码
     const PASSWORD = "CduoD5201314";
 
     function getToday() {
@@ -142,42 +188,37 @@
     function init() {
         const savedDate = localStorage.getItem(dateKey);
         const today = getToday();
-
         if (savedDate !== today) {
             localStorage.setItem(dateKey, today);
             localStorage.setItem(todayKey, "0");
         }
-
         updateUI();
     }
 
     function addCigarette() {
         let today = parseInt(localStorage.getItem(todayKey) || "0");
         let total = parseInt(localStorage.getItem(totalKey) || "0");
-
         today++;
         total++;
-
         localStorage.setItem(todayKey, today);
         localStorage.setItem(totalKey, total);
-
         updateUI();
     }
 
     function resetToday() {
-        if (confirm("确定把今天清零吗？没关系，是新的开始 🌱")) {
+        if (confirm("确定把今天清零吗？\n没关系，是温柔的新开始。")) {
             localStorage.setItem(todayKey, "0");
             updateUI();
         }
     }
 
     function checkPassword() {
-        const input = prompt("请输入密码查看累计记录");
+        const input = prompt("请输入密码");
         if (input === PASSWORD) {
             document.getElementById("totalArea").classList.remove("hidden");
             updateUI();
         } else if (input !== null) {
-            alert("密码不对，但没关系 🌷");
+            alert("不对哦，但你还是很棒 🌷");
         }
     }
 
