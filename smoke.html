@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>慢慢戒烟 · 我在陪你</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(180deg, #fff0f3, #fdfbfb);
+        color: #444;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .card {
+        background: #fff;
+        width: 90%;
+        max-width: 420px;
+        padding: 28px;
+        border-radius: 18px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    h1 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #d6336c;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        color: #777;
+        margin-bottom: 24px;
+        line-height: 1.6;
+    }
+
+    .count {
+        font-size: 40px;
+        font-weight: bold;
+        color: #333;
+        margin: 10px 0;
+    }
+
+    .label {
+        font-size: 14px;
+        color: #999;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 14px;
+        border-radius: 12px;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .add {
+        background: #ff6b81;
+        color: #fff;
+    }
+
+    .add:hover {
+        background: #fa5c72;
+    }
+
+    .reset {
+        background: #f1f3f5;
+        color: #666;
+    }
+
+    .secret {
+        background: #fff0f6;
+        color: #d6336c;
+        border: 1px dashed #ffb3c1;
+    }
+
+    .footer {
+        margin-top: 22px;
+        font-size: 13px;
+        color: #aaa;
+        line-height: 1.6;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+</head>
+
+<body>
+<div class="card">
+    <h1>慢慢戒烟 🌷</h1>
+    <div class="subtitle">
+        不急，不逼自己。<br>
+        你愿意记录，本身就很了不起。
+    </div>
+
+    <div class="label">今天已经抽了</div>
+    <div class="count" id="todayCount">0</div>
+    <div class="label">根</div>
+
+    <button class="add" onclick="addCigarette()">我刚抽了一根</button>
+    <button class="reset" onclick="resetToday()">今天重新开始</button>
+
+    <hr style="margin:26px 0;border:none;border-top:1px solid #eee">
+
+    <!-- 累计总数（默认隐藏） -->
+    <div id="totalArea" class="hidden">
+        <div class="label">累计抽烟总数</div>
+        <div class="count" id="totalCount">0</div>
+        <div class="label">根</div>
+    </div>
+
+    <button class="secret" onclick="checkPassword()">查看累计总数</button>
+
+    <div class="footer">
+        不是逼自己变好，<br>
+        是慢慢学会心疼自己。
+    </div>
+</div>
+
+<script>
+    const todayKey = "smoke_today";
+    const totalKey = "smoke_total";
+    const dateKey  = "smoke_date";
+
+    // 🔐 在这里改密码
+    const PASSWORD = "CduoD5201314";
+
+    function getToday() {
+        return new Date().toISOString().slice(0, 10);
+    }
+
+    function init() {
+        const savedDate = localStorage.getItem(dateKey);
+        const today = getToday();
+
+        if (savedDate !== today) {
+            localStorage.setItem(dateKey, today);
+            localStorage.setItem(todayKey, "0");
+        }
+
+        updateUI();
+    }
+
+    function addCigarette() {
+        let today = parseInt(localStorage.getItem(todayKey) || "0");
+        let total = parseInt(localStorage.getItem(totalKey) || "0");
+
+        today++;
+        total++;
+
+        localStorage.setItem(todayKey, today);
+        localStorage.setItem(totalKey, total);
+
+        updateUI();
+    }
+
+    function resetToday() {
+        if (confirm("确定把今天清零吗？没关系，是新的开始 🌱")) {
+            localStorage.setItem(todayKey, "0");
+            updateUI();
+        }
+    }
+
+    function checkPassword() {
+        const input = prompt("请输入密码查看累计记录");
+        if (input === PASSWORD) {
+            document.getElementById("totalArea").classList.remove("hidden");
+            updateUI();
+        } else if (input !== null) {
+            alert("密码不对，但没关系 🌷");
+        }
+    }
+
+    function updateUI() {
+        document.getElementById("todayCount").innerText =
+            localStorage.getItem(todayKey) || "0";
+        document.getElementById("totalCount").innerText =
+            localStorage.getItem(totalKey) || "0";
+    }
+
+    init();
+</script>
+</body>
+</html>
